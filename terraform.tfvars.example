@@ -1,0 +1,26 @@
+subscription_id            = "00000000-0000-0000-0000-000000000000"
+location                   = "eastus"
+resource_group_name        = "rg-aks-argo"
+cluster_name               = "aks-argo"
+dns_prefix                 = "aks-argo"
+node_count                 = 2
+node_vm_size               = "Standard_D4s_v5"
+argocd_server_service_type = "LoadBalancer"
+
+# Storage account + Azure Blob container for MyDumper backups
+storage_account_name_prefix      = "stmydump"
+storage_account_tier             = "Standard"
+storage_account_replication_type = "LRS"
+backup_blob_container_name       = "mydumper-backups"
+backup_blob_capacity_gb          = 100
+azure_blob_secret_name           = "azure-blob-credentials"
+backup_blob_storage_class_name   = "azureblob-fuse-csi"
+backup_blob_protocol             = "fuse"
+
+# Push this repository to Git and point Argo CD at it.
+app_repo_url      = "https://github.com/your-org/aks-argo.git"
+app_repo_revision = "main"
+app_repo_path     = "apps/mydumper-cronjob"
+
+# Optional: bcrypt hash for the Argo CD admin password.
+# argocd_admin_password = "$2a$10$..."

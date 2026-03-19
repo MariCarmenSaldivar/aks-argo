@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mydumper-scripts
+  namespace: backup-jobs
+  labels:
+    app.kubernetes.io/name: mydumper-cronjob
+data:
+  run-backup.sh: |
+    #!/bin/sh
+    set -eu
+
+    timestamp="$(date +%Y%m%d-%H%M%S)"
+    target_dir="${BACKUP_ROOT_DIR:-/backup}/${timestamp}"
+    retention_count="${BACKUP_RETENTION_COUNT:-7}"
+
+    mkdir -p "${target_dir}"
+
+    mydumper \
+      --defaults-file=/etc/mydumper/mydumper.cnf \
+      --outputdir="${target_dir}" \
+      --threads="${MYDUMPER_THREADS:-4}" \
+      --compress \
+      --trx-consistency-only \
+      --verbose=3
+
+    find "${BACKUP_ROOT_DIR:-/backup}" -mindepth 1 -maxdepth 1 -type d | sort | head -n -"${retention_count}" | xargs -r rm -rf
