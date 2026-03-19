@@ -21,7 +21,7 @@ data:
       --outputdir="${target_dir}" \
       --threads="${MYDUMPER_THREADS:-4}" \
       --compress \
-      --trx-consistency-only \
+      --trx-tables \
       --verbose=3
 
     find "${BACKUP_ROOT_DIR:-/backup}" -mindepth 1 -maxdepth 1 -type d | sort | head -n -"${retention_count}" | xargs -r rm -rf
